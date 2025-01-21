@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все устройства</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        .device-list {
+            width: 80%;
+            margin-top: 20px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        .device-item {
+            padding: 10px;
+            border-bottom: 1px solid #303030;
+        }
+        .device-item:last-child {
+            border-bottom: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .device-item {
+            background: #282828;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .sessions-amount {
+            display: block; /* Перенос на новую строку */
+            margin-top: 8px;
+            color: #FFD700; /* Цвет для выделения */
+            font-size: 1.2em; /* Увеличение размера шрифта */
+            font-weight: bold; /* Жирный текст */
+        }
+
+    </style>
+</head>
+<body>
+<h1>Список всех устройств</h1>
+<div class="device-list" id="device-list">
+    <p>Загрузка устройств...</p>
+</div>
+<button onclick="window.location.href='devices.html'">Вернуться</button>
+
+<script>
+    fetch('http://localhost:3000/api/device/')
+        .then(response => response.json())
+        .then(data => {
+            const deviceList = document.getElementById('device-list');
+            deviceList.innerHTML = ''; // Очистка списка перед добавлением новых данных
+
+            if (data.length === 0) {
+                deviceList.innerHTML = '<p>Нет доступных устройств.</p>';
+            } else {
+                // Сортировка данных по sessionsAmount в порядке убывания
+                data.sort((a, b) => b.sessionsAmount - a.sessionsAmount);
+
+                data.forEach(device => {
+                    const deviceItem = document.createElement('div');
+                    deviceItem.className = 'device-item';
+
+                    // Создание содержимого для каждого устройства
+                    deviceItem.textContent = `Серийный номер: ${device.serialNumber}, Модель: ${device.model}`;
+
+                    // Добавление количества сессий
+                    const sessionsAmount = document.createElement('span');
+                    sessionsAmount.className = 'sessions-amount';
+                    sessionsAmount.textContent = `Количество сессий: ${device.sessionsAmount}`;
+
+                    // Добавление количества сессий к устройству
+                    deviceItem.appendChild(sessionsAmount);
+
+                    // Добавление элемента в список
+                    deviceList.appendChild(deviceItem);
+                });
+            }
+        })
+        .catch(error => {
+            const deviceList = document.getElementById('device-list');
+            deviceList.innerHTML = '<p>Ошибка при загрузке устройств. Попробуйте позже.</p>';
+            console.error('Ошибка загрузки данных:', error);
+        });
+
+</script>
+</body>
+</html>

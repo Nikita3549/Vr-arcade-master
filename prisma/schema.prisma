@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id         String @unique @default(uuid())
+  firstName  String @map("first_name")
+  lastName   String @map("last_name")
+  patronymic String
+
+  sessions Sessions[]
+
+  @@id([firstName, lastName, patronymic])
+  @@map("clients")
+}
+
+model Device {
+  serialNumber String @id @map("serial_number")
+  model        String @unique
+
+  sessions sessions_devices[]
+
+  @@map("device")
+}
+
+model Game {
+  name        String  @id @default(uuid())
+  pathToImage String?
+
+  sessions sessions_games[]
+
+  @@map("games")
+}
+
+model Sessions {
+  id     String   @id @default(uuid())
+  from   DateTime
+  to     DateTime
+  userId String
+
+  games   sessions_games[]
+  devices sessions_devices[]
+
+  user_fullName Client @relation(fields: [userId], references: [id])
+
+  @@map("session")
+}
+
+model sessions_games {
+  sessionId String @map("session_id")
+  gameName  String @map("game_name")
+
+  sessions_id Sessions @relation(fields: [sessionId], references: [id])
+  game_name   Game     @relation(fields: [gameName], references: [name])
+
+  @@id([gameName, sessionId])
+}
+
+model sessions_devices {
+  sessionId    String @map("session_id")
+  device_model String
+
+  sessions_id   Sessions @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  devices_model Device   @relation(fields: [device_model], references: [model], onDelete: Restrict)
+
+  @@id([sessionId, device_model])
+}

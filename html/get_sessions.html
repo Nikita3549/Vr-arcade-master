@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Получить сеансы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+        }
+        button {
+            background-color: #FFD700;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .session-list {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .session-item {
+            border-bottom: 1px solid #303030;
+            padding: 10px 0;
+        }
+        .session-item:last-child {
+            border-bottom: none;
+        }
+        .main-menu-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-menu-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Получить сеансы</h1>
+<form id="get-sessions-form">
+    <label for="date">Введите дату (формат: YYYY-MM-DD):</label>
+    <input type="text" id="date" name="date" required placeholder="1970-01-01">
+    <button type="submit">Получить сеансы</button>
+</form>
+<div class="session-list" id="session-list"></div>
+<button class="main-menu-button" onclick="window.location.href='app.html'">Главное меню</button>
+<script>
+    document.getElementById('get-sessions-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const date = document.getElementById('date').value;
+        const sessionList = document.getElementById('session-list');
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/session/${date}`);
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            sessionList.innerHTML = ''; // Очистка списка перед добавлением новых данных
+
+            if (data.length === 0) {
+                sessionList.innerHTML = '<p>Нет доступных сеансов на указанную дату.</p>';
+            } else {
+                data.forEach(session => {
+                    const sessionItem = document.createElement('div');
+                    sessionItem.className = 'session-item';
+
+                    // Создание строки с устройствами
+                    const devices = session.devices.map(device => device.device_model).join(', ');
+
+                    // Создание строки с играми
+                    const games = session.gameName.map(game => game.gameName).join(', ');
+
+                    sessionItem.innerHTML = `
+                        <p><strong>ID:</strong> ${session.id}</p>
+                        <p><strong>Начало:</strong> ${new Date(session.from).toLocaleString()}</p>
+                        <p><strong>Окончание:</strong> ${new Date(session.to).toLocaleString()}</p>
+                        <p><strong>Клиент:</strong> ${session.client.lastName} ${session.client.firstName} ${session.client.patronymic}</p>
+                        <p><strong>Устройства:</strong> ${devices}</p>
+                        <p><strong>Игры:</strong> ${games}</p>
+                    `;
+                    sessionList.appendChild(sessionItem);
+                });
+            }
+        } catch (error) {
+            sessionList.innerHTML = '<p>Ошибка при загрузке сеансов. Попробуйте позже.</p>';
+            console.error('Ошибка загрузки данных:', error);
+        }
+    });
+</script>
+</body>
+</html>

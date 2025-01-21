@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать сеанс</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            font-size: 14px;
+        }
+        input, textarea, select, button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input, textarea, select {
+            width: 100%;
+        }
+        button {
+            background-color: #FFD700;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .main-menu-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-menu-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Создать сеанс</h1>
+<form id="create-session-form">
+    <label for="from">Начало сеанса (формат: YYYY-MM-DDTHH:mm:ss):</label>
+    <input type="text" id="from" name="from" required placeholder="2000-02-09T23:10:00">
+
+    <label for="to">Окончание сеанса (формат: YYYY-MM-DDTHH:mm:ss):</label>
+    <input type="text" id="to" name="to" required placeholder="2000-02-09T23:55:00">
+
+    <label for="firstName">Имя:</label>
+    <input type="text" id="firstName" name="firstName" required placeholder="Иван">
+
+    <label for="lastName">Фамилия:</label>
+    <input type="text" id="lastName" name="lastName" required placeholder="Иванов">
+
+    <label for="patronymic">Отчество:</label>
+    <input type="text" id="patronymic" name="patronymic" required placeholder="Иванович">
+
+    <label for="deviceModels">Модели устройств (через запятую):</label>
+    <textarea id="deviceModels" name="deviceModels" required placeholder="PS VR 2, Oculus Rift 2"></textarea>
+
+    <label for="gameNames">Названия игр (через запятую):</label>
+    <textarea id="gameNames" name="gameNames" required placeholder="Game A, Game B"></textarea>
+
+    <button type="submit">Создать сеанс</button>
+</form>
+<button class="main-menu-button" onclick="window.location.href='app.html'">Главное меню</button>
+<script>
+    document.getElementById('create-session-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = {
+            from: document.getElementById('from').value,
+            to: document.getElementById('to').value,
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            patronymic: document.getElementById('patronymic').value,
+            deviceModels: document.getElementById('deviceModels').value.split(',').map(item => item.trim()),
+            gameNames: document.getElementById('gameNames').value.split(',').map(item => item.trim())
+        };
+
+        try {
+            console.log(formData)
+            const response = await fetch('http://localhost:3000/api/session/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Сеанс успешно создан!');
+            } else {
+                alert('Неправильно заполнена форма');
+            }
+        } catch (error) {
+            alert('Ошибка при соединении с сервером.');
+            console.error('Ошибка:', error);
+        }
+    });
+</script>
+</body>
+</html>

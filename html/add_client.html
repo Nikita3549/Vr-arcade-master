@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить клиента</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #FFFFFF;
+            border-radius: 5px;
+            background-color: #303030;
+            color: #FFFFFF;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Добавить клиента</h1>
+<form id="add-client-form">
+    <label for="firstName">Имя:</label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="lastName">Фамилия:</label>
+    <input type="text" id="lastName" name="lastName" required>
+
+    <label for="patronymic">Отчество:</label>
+    <input type="text" id="patronymic" name="patronymic" required>
+
+    <button type="submit">Отправить</button>
+</form>
+
+<button class="main-button" onclick="window.location.href='clients.html'">Вернуться</button>
+
+<script>
+    document.getElementById('add-client-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const clientData = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            patronymic: document.getElementById('patronymic').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/client/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(clientData)
+            });
+
+            if (response.ok) {
+                alert('Клиент успешно добавлен!');
+                window.location.href = 'clients.html';
+            } else {
+                alert((await response.json()).message);
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка при добавлении клиента.');
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить игру к сеансу</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+        }
+        button {
+            background-color: #FFD700;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .response {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .main-menu-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-menu-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Добавить игру к сеансу</h1>
+<form id="add-game-form">
+    <label for="sessionId">ID сеанса:</label>
+    <input type="text" id="sessionId" name="sessionId" required placeholder="id">
+
+    <label for="gameName">Название игры:</label>
+    <input type="text" id="gameName" name="gameName" required placeholder="Game A">
+
+    <button type="submit">Добавить игру</button>
+</form>
+<div class="response" id="response"></div>
+<button class="main-menu-button" onclick="window.location.href='app.html'">Главное меню</button>
+
+<script>
+    document.getElementById('add-game-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const sessionId = document.getElementById('sessionId').value;
+        const gameName = document.getElementById('gameName').value;
+        const responseDiv = document.getElementById('response');
+
+        try {
+            const response = await fetch('http://localhost:3000/api/session/change/add-game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sessionId,
+                    gameName
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            responseDiv.innerHTML = `<p>Игра "${gameName}" успешно добавлена к сеансу с ID: ${sessionId}</p>`;
+        } catch (error) {
+            responseDiv.innerHTML = `Неверно введены данные`;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const gameController_class_1 = require("../../controllers/game/gameController.class");
+const multer_1 = require("./multer");
+const gameController = new gameController_class_1.GameController();
+const router = (0, express_1.Router)();
+router.get('/', gameController.getAllGames);
+router.post('/create', multer_1.upload.single('image'), gameController.createGame);
+router.get('/getImage/:pathToImage', gameController.getImage);
+router.get('/:name', gameController.getGameInfo);
+exports.default = router;

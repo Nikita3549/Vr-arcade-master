@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const sessionController_class_1 = require("../../controllers/sessions/sessionController.class");
+const router = (0, express_1.Router)();
+const sessionController = new sessionController_class_1.SessionController();
+router.post('/create', sessionController.createSession);
+router.get('/:date', sessionController.getSessionsByDate);
+router.post('/change/add-game', sessionController.addGame);
+router.post('/change/add-device', sessionController.addDevice);
+router.delete('/:id', sessionController.deleteSession);
+exports.default = router;

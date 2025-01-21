@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали игры</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        .game-details {
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+        }
+        .main-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<div class="game-details">
+    <h1 id="gameName">Название игры</h1>
+    <img id="gameImage" src="" alt="Изображение игры" />
+</div>
+<button class="main-button" onclick="window.location.href='games.html'">Вернуться к играм</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const gameData = JSON.parse(sessionStorage.getItem('gameData'));
+
+        if (gameData) {
+            document.getElementById('gameName').textContent = gameData.name;
+            document.getElementById('gameImage').src = gameData.pathToImage;
+        } else {
+            alert('Данные об игре отсутствуют. Вернитесь назад.');
+            window.location.href = 'get_game_details.html';
+        }
+    });
+</script>
+</body>
+</html>

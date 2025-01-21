@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игры</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 15px;
+            background-color: #FFFFFF;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #E0E0E0;
+        }
+        .main-button {
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Управление играми</h1>
+<button onclick="window.location.href='create_game.html'">Добавить игру</button>
+<button onclick="getAllGames()">Популярные игры</button>
+<button onclick="window.location.href='get_game_details.html'">Получить фото игры</button>
+<button class="main-button" onclick="window.location.href='app.html'">Вернуться на главную</button>
+
+<script>
+    async function getAllGames() {
+        try {
+            const response = await fetch('http://localhost:3000/api/game');
+            if (response.ok) {
+                const games = await response.json();
+                window.location.href = 'games_list.html';
+                sessionStorage.setItem('games', JSON.stringify(games));
+            } else {
+                alert('Не удалось получить список игр');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка при получении списка игр');
+        }
+    }
+</script>
+</body>
+</html>

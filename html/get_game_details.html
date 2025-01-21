@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Данные об игре</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+        }
+        form {
+            background: #282828;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #1e1e1e;
+            color: #FFFFFF;
+        }
+        button {
+            padding: 10px;
+            background-color: #FFFFFF;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #E0E0E0;
+        }
+        .main-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Фото игры</h1>
+<form id="getGameDetailsForm">
+    <input type="text" name="gameName" placeholder="Название игры" required />
+    <button type="submit">Отправить</button>
+</form>
+<button class="main-button" onclick="window.location.href='games.html'">Вернуться к играм</button>
+
+<script>
+    document.getElementById('getGameDetailsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const gameName = e.target.gameName.value;
+        const encodedName = encodeURIComponent(gameName);
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/game/${encodedName}`);
+            if (response.ok) {
+                const gameData = await response.json();
+                sessionStorage.setItem('gameData', JSON.stringify(gameData));
+                window.location.href = 'game_details.html';
+            } else {
+                alert('Не удалось получить данные об игре');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка при получении данных об игре');
+        }
+    });
+</script>
+</body>
+</html>

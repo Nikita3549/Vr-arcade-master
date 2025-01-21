@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клиенты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+        }
+        button {
+            padding: 15px 30px;
+            margin: 15px;
+            background-color: #FFFFFF;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        button:hover {
+            background-color: #E0E0E0;
+        }
+        .main-button {
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Управление клиентами</h1>
+<button onclick="window.location.href='add_client.html'">Добавить клиента</button>
+<button onclick="window.location.href='get_client_sessions.html'">Получить сеансы клиента</button>
+<button class="main-button" onclick="window.location.href='app.html'">Вернуться на главную</button>
+</body>
+</html>

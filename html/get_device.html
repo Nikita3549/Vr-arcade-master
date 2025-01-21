@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Получить модель устройства</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #FFFFFF;
+            border-radius: 5px;
+            background-color: #303030;
+            color: #FFFFFF;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .device-data {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>Получить модель устройства</h1>
+<form id="get-device-form">
+    <label for="serialNumber">Серийный номер:</label>
+    <input type="text" id="serialNumber" name="serialNumber" required>
+
+    <button type="submit">Отправить</button>
+</form>
+
+<button class="main-button" onclick="window.location.href='devices.html'">Вернуться</button>
+
+<div class="device-data" id="device-data"></div>
+
+<script>
+    document.getElementById('get-device-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const serialNumber = document.getElementById('serialNumber').value;
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/device/${serialNumber}`);
+
+            if (response.ok) {
+                const device = await response.json();
+                document.getElementById('device-data').innerHTML = `
+                        <h2>Информация об устройстве</h2>
+                        <p><strong>Серийный номер:</strong> ${device.serialNumber}</p>
+                        <p><strong>Модель:</strong> ${device.model}</p>
+                    `;
+            } else {
+                alert('Не удалось получить данные об устройстве.');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка при получении данных об устройстве.');
+        }
+    });
+</script>
+</body>
+</html>

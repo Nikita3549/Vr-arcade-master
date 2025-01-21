@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список игр</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .game-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+            max-width: 600px;
+        }
+        .game-list li {
+            background: #282828;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .game-list li .sessions-amount {
+            display: block;
+            margin-top: 8px;
+            color: #FFD700;
+            font-size: 1.2em;
+        }
+        .main-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Список популярных игр</h1>
+<ul class="game-list" id="gameList"></ul>
+<button class="main-button" onclick="window.location.href='games.html'">Вернуться к играм</button>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const games = JSON.parse(sessionStorage.getItem('games')) || [];
+        const gameList = document.getElementById('gameList');
+
+        if (games.length > 0) {
+            games.sort((a, b) => b.sessionsAmount - a.sessionsAmount)
+
+            games.forEach(game => {
+                const li = document.createElement('li');
+                li.textContent = game.name;
+
+                const span = document.createElement('span');
+                span.classList.add('sessions-amount');
+                span.textContent = `Количество сессий: ${game.sessionsAmount}`;
+                li.appendChild(span);
+
+                gameList.appendChild(li);
+            });
+        } else {
+            gameList.textContent = 'Список игр пуст.';
+        }
+    });
+</script>
+</body>
+</html>

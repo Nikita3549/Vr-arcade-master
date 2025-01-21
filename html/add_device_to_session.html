@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить устройство к сеансу</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #181818;
+            color: #FFFFFF;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+        }
+        button {
+            background-color: #FFD700;
+            color: black;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #FFC107;
+        }
+        .response {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #202020;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .main-menu-button {
+            margin-top: 20px;
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-menu-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Добавить устройство к сеансу</h1>
+<form id="add-device-form">
+    <label for="sessionId">ID сеанса:</label>
+    <input type="text" id="sessionId" name="sessionId" required placeholder="248b8c78-d639-4a57-99ea-f20e442e8581">
+
+    <label for="deviceModel">Модель устройства:</label>
+    <input type="text" id="deviceModel" name="deviceModel" required placeholder="Oculus Rift 3">
+
+    <button type="submit">Добавить устройство</button>
+</form>
+<div class="response" id="response"></div>
+<button class="main-menu-button" onclick="window.location.href='app.html'">Главное меню</button>
+
+<script>
+    document.getElementById('add-device-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const sessionId = document.getElementById('sessionId').value;
+        const deviceModel = document.getElementById('deviceModel').value;
+        const responseDiv = document.getElementById('response');
+
+        try {
+            const response = await fetch('http://localhost:3000/api/session/change/add-device', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sessionId,
+                    deviceModel
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            responseDiv.innerHTML = `<p>Устройство "${deviceModel}" успешно добавлено к сеансу с ID: ${sessionId}</p>`;
+        } catch (error) {
+            responseDiv.innerHTML = `Неверно введены данные`;
+            console.error('Ошибка запроса:', error);
+        }
+    });
+</script>
+</body>
+</html>

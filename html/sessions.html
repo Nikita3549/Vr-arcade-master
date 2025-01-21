@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сеансы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #FFFFFF;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #F5F5F5;
+        }
+        .main-menu-button {
+            background-color: #FFD700;
+            color: black;
+            font-weight: bold;
+        }
+        .main-menu-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+<h1>Сеансы</h1>
+<div class="button-container">
+    <button onclick="window.location.href='create_session.html'">Создать сеанс</button>
+    <button onclick="window.location.href='get_sessions.html'">Получить сеансы</button>
+    <button onclick="window.location.href='add_game_to_session.html'">Добавить игру к сеансу</button>
+    <button onclick="window.location.href='add_device_to_session.html'">Добавить устройство к сеансу</button>
+    <button onclick="window.location.href='delete_session.html'">Удалить сеанс</button>
+    <button class="main-menu-button" onclick="window.location.href='app.html'">Главное меню</button>
+</div>
+</body>
+</html>
