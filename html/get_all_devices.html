@@ -56,11 +56,11 @@
         }
 
         .sessions-amount {
-            display: block; /* Перенос на новую строку */
+            display: block;
             margin-top: 8px;
-            color: #FFD700; /* Цвет для выделения */
-            font-size: 1.2em; /* Увеличение размера шрифта */
-            font-weight: bold; /* Жирный текст */
+            color: #FFD700;
+            font-size: 1.2em;
+            font-weight: bold;
         }
 
     </style>
@@ -71,8 +71,12 @@
     <p>Загрузка устройств...</p>
 </div>
 <button onclick="window.location.href='devices.html'">Вернуться</button>
+<button id="download-btn">Скачать устройства</button>
 
 <script>
+    const { ipcRenderer } = require('electron'); // Для взаимодействия с главным процессом Electron
+
+    // Загрузка устройств из API
     fetch('http://localhost:3000/api/device/')
         .then(response => response.json())
         .then(data => {
@@ -103,6 +107,9 @@
                     // Добавление элемента в список
                     deviceList.appendChild(deviceItem);
                 });
+
+                // Сохраняем устройства в глобальную переменную для скачивания
+                window.devices = data;
             }
         })
         .catch(error => {
@@ -111,6 +118,19 @@
             console.error('Ошибка загрузки данных:', error);
         });
 
+    // Обработчик нажатия кнопки "Скачать устройства"
+    document.getElementById('download-btn').addEventListener('click', () => {
+        if (!window.devices || window.devices.length === 0) {
+            alert('Нет данных для сохранения.');
+            return;
+        }
+
+        // Формируем текст для сохранения
+        const fileContent = window.devices.map(device => `${device.model} ${device.serialNumber}`).join('\n');
+
+        // Отправляем данные в главный процесс для сохранения
+        ipcRenderer.send('save-devices-to-file', fileContent);
+    });
 </script>
 </body>
 </html>
